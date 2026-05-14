@@ -128,7 +128,7 @@ export default function App() {
             </div>
             <span className="font-black text-xl sm:text-3xl tracking-tighter italic">GetThumbnail</span>
           </div>
-          <a href="https://buymeacoffee.com" target="_blank" className="text-xs sm:text-sm font-black bg-zinc-100 px-4 py-2 rounded-xl hover:bg-zinc-200 transition-all">Support Us</a>
+          <a href="mailto:pubgads77@gmail.com" className="text-xs sm:text-sm font-black bg-zinc-100 px-4 py-2 rounded-xl hover:bg-zinc-200 transition-all">Contact Support</a>
         </div>
       </nav>
 
@@ -190,10 +190,11 @@ export default function App() {
             <p className="text-zinc-800 text-sm max-w-sm font-bold">The professional engine for original YouTube assets extraction at full fidelity.</p>
           </div>
           
-          <div className="flex justify-center gap-8 text-sm font-black text-zinc-900">
-            <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-600 transition-colors underline underline-offset-4">Privacy Policy</button>
-            <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-600 transition-colors underline underline-offset-4">Terms of Service</button>
-          </div>
+          <div className="flex flex-wrap justify-center gap-6 text-sm font-black text-zinc-900">
+  <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-600 transition-colors underline underline-offset-4">Privacy Policy</button>
+  <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-600 transition-colors underline underline-offset-4">Terms of Service</button>
+  <button onClick={() => setActiveModal('contact')} className="hover:text-emerald-600 transition-colors underline underline-offset-4">Contact Us</button>
+</div>
         </div>
       </footer>
 
@@ -246,6 +247,17 @@ export default function App() {
           <p>2. <strong>Intellectual Property:</strong> All thumbnails are the property of their respective creators. You should seek permission before using them commercially.</p>
           <p>3. <strong>Disclaimer:</strong> GetThumbnail is not affiliated with YouTube or Google. We provide the service "as-is".</p>
         </div>
+      </LegalModal>
+
+      <LegalModal title="Contact Us" isOpen={activeModal === 'contact'} onClose={() => setActiveModal(null)}>
+  <div className="space-y-6 text-center">
+    <p className="text-zinc-800 font-medium">Have a question or feedback? We'd love to hear from you!</p>
+    <div className="bg-emerald-50 p-6 rounded-[2rem] border border-emerald-100">
+      <p className="text-xs uppercase font-black text-emerald-600 tracking-widest mb-2">Official Support Email</p>
+      <a href="mailto:pubgads77@gmail.com" className="text-2xl font-black text-zinc-900 hover:text-emerald-600 transition-colors">pubgads77@gmail.com</a>
+    </div>
+    <p className="text-zinc-400 text-xs text-center">We usually respond within 24-48 hours.</p>
+  </div>
       </LegalModal>
     </div>
   );
