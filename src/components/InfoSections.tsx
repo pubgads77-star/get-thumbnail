@@ -13,7 +13,7 @@ export const InfoSections = () => {
             <span className="text-emerald-500 font-black">2.</span> Paste it into the box above.
           </div>
           <div className="p-6 bg-white border border-zinc-100 rounded-3xl shadow-sm">
-            <span className="text-emerald-500 font-black">3.</span> Choose quality and click Download.
+            <span className="text-emerald-500 font-black">3.</span> Choose the quality and format, and click download..
           </div>
         </div>
       </section>
