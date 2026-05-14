@@ -1,7 +1,7 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * GetThumbnail - Pure English Version
+ * GetThumbnail - Final English Production Version
  */
 
 import { useState, useEffect } from 'react';
@@ -26,7 +26,7 @@ const LegalModal = ({ title, isOpen, onClose, children }: any) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-white rounded-[2rem] w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-white rounded-[2rem] w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl animate-glow">
         <div className="p-6 border-b border-zinc-100 flex items-center justify-between bg-zinc-50">
           <h2 className="text-xl font-black text-zinc-900">{title}</h2>
           <button onClick={onClose} className="p-2 hover:bg-zinc-200 rounded-full transition-colors">
@@ -52,7 +52,7 @@ const AdPlaceholder = ({ position }: { position: 'top' | 'sidebar' | 'bottom' | 
       position === 'inline' && "w-full p-6 rounded-3xl border-emerald-500/10 bg-emerald-500/5 text-emerald-600/40"
     )}>
       <div className="bg-zinc-200 px-3 py-1 rounded-full mb-2 text-zinc-500 text-[10px] uppercase tracking-widest">ADVERTISEMENT</div>
-      <div className="text-sm">AdSense Placement</div>
+      <div className="text-sm font-medium italic">Your AdSense Slot Here</div>
     </div>
   );
 };
@@ -123,7 +123,7 @@ export default function App() {
       <nav className="border-b border-zinc-200 bg-white/60 backdrop-blur-3xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-24 flex items-center justify-between">
           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div className="w-9 h-9 sm:w-12 sm:h-12 bg-emerald-500 rounded-xl flex items-center justify-center shadow-xl shadow-emerald-500/20">
+            <div className="w-9 h-9 sm:w-12 sm:h-12 bg-emerald-500 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-500/20">
               <Youtube className="text-white w-5 h-5 sm:w-7 sm:h-7" />
             </div>
             <span className="font-black text-xl sm:text-3xl tracking-tighter italic">GetThumbnail</span>
@@ -166,15 +166,14 @@ export default function App() {
             <InfoSections />
           </div>
 
-          {/* Sidebar */}
           <aside className="lg:col-span-4 space-y-8">
             <section className="bg-white border border-zinc-100 rounded-[2rem] p-6 shadow-xl">
               <h3 className="font-bold mb-6 flex items-center gap-2"><History className="w-5 h-5 text-emerald-600" /> Recent Exports</h3>
               <div className="space-y-4">
                 {history.length === 0 ? <p className="text-zinc-400 text-xs italic">No history yet.</p> : history.map((item) => (
-                  <button key={item.id} onClick={() => { setUrl(`https://youtube.com/watch?v=${item.id}`); handleFetch(); }} className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-50 border border-transparent hover:border-zinc-100 transition-all text-left">
-                    <img src={`https://img.youtube.com/vi/${item.id}/default.jpg`} className="w-16 aspect-video rounded-lg object-cover" />
-                    <span className="text-xs font-mono text-zinc-500 truncate">{item.id}</span>
+                  <button key={item.id} onClick={() => { setUrl(`https://youtube.com/watch?v=${item.id}`); handleFetch(); }} className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-50 border border-transparent hover:border-zinc-100 transition-all text-left group">
+                    <img src={`https://img.youtube.com/vi/${item.id}/default.jpg`} className="w-16 aspect-video rounded-lg object-cover" alt="prev" />
+                    <span className="text-xs font-mono text-zinc-500 truncate group-hover:text-emerald-600">ID: {item.id}</span>
                   </button>
                 ))}
               </div>
@@ -184,31 +183,29 @@ export default function App() {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-zinc-100 py-20 mt-32 bg-white">
         <div className="max-w-7xl mx-auto px-4 text-center space-y-8">
           <div className="flex flex-col items-center gap-4">
-            <span className="font-black text-2xl italic text-emerald-600 font-sans">GetThumbnail</span>
-            <p className="text-zinc-400 text-sm max-w-sm">The professional engine for original YouTube assets extraction at full fidelity.</p>
+            <span className="font-black text-2xl italic text-emerald-600">GetThumbnail</span>
+            <p className="text-zinc-400 text-sm max-w-sm font-medium">The professional engine for original YouTube assets extraction at full fidelity.</p>
           </div>
           
-          <div className="flex justify-center gap-8 text-sm font-bold text-zinc-400">
-            <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-500 transition-colors underline">Privacy Policy</button>
-            <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-500 transition-colors underline">Terms of Service</button>
+          <div className="flex justify-center gap-8 text-sm font-bold text-zinc-500">
+            <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-500 transition-colors underline decoration-zinc-200 underline-offset-4">Privacy Policy</button>
+            <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-500 transition-colors underline decoration-zinc-200 underline-offset-4">Terms of Service</button>
           </div>
 
           <div className="pt-8 border-t border-zinc-50 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-zinc-400 text-[10px] font-black tracking-widest uppercase">AI Powered Asset Engine</p>
-            <p className="text-zinc-300 text-[10px] font-bold uppercase">© {new Date().getFullYear()} All Rights Reserved</p>
+            <p className="text-zinc-300 text-[10px] font-bold uppercase">© {new Date().getFullYear()} GetThumbnail. All Rights Reserved</p>
           </div>
         </div>
       </footer>
 
-      {/* Legal Modals */}
       <LegalModal title="Privacy Policy" isOpen={activeModal === 'privacy'} onClose={() => setActiveModal(null)}>
         <div className="space-y-4">
           <p>Your privacy is important to us. GetThumbnail does not store any personal data, IP addresses, or the YouTube links you process on our servers.</p>
-          <p><strong>Cookies:</strong> We use Google AdSense which may use cookies to serve ads based on your prior visits to this or other websites.</p>
+          <p><strong>Cookies:</strong> We use Google AdSense which may use cookies to serve ads based on your prior visits.</p>
           <p><strong>Data Usage:</strong> All image processing happens via temporary edge functions and is delivered directly to your browser.</p>
         </div>
       </LegalModal>
@@ -216,8 +213,8 @@ export default function App() {
       <LegalModal title="Terms of Service" isOpen={activeModal === 'terms'} onClose={() => setActiveModal(null)}>
         <div className="space-y-4">
           <p>1. <strong>Usage:</strong> This tool is provided for personal and educational use only.</p>
-          <p>2. <strong>Intellectual Property:</strong> All thumbnails are the property of their respective YouTube creators. You should seek permission before using them commercially.</p>
-          <p>3. <strong>Disclaimer:</strong> GetThumbnail is not affiliated with YouTube or Google. We provide the service "as-is" without warranties.</p>
+          <p>2. <strong>Intellectual Property:</strong> All thumbnails are the property of their respective creators. You should seek permission before using them commercially.</p>
+          <p>3. <strong>Disclaimer:</strong> GetThumbnail is not affiliated with YouTube or Google. We provide the service "as-is".</p>
         </div>
       </LegalModal>
     </div>
