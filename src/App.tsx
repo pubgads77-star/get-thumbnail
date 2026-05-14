@@ -11,6 +11,7 @@ import { cn } from './lib/utils';
 import { HeroInput } from './components/HeroInput';
 import { ResultsView } from './components/ResultsView';
 import { InfoSections } from './components/InfoSections';
+import { LegalModals } from './components/LegalModals'; // استيراد ملف الصفحات القانونية
 import { 
   History, 
   Coffee, 
@@ -51,6 +52,9 @@ export default function App() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
+  
+  // حالة التحكم في الصفحات القانونية
+  const [activeModal, setActiveModal] = useState<string | null>(null);
 
   const isRTL = i18n.language === 'ar';
 
@@ -75,13 +79,11 @@ export default function App() {
     const id = extractVideoId(url);
     if (id) {
       setIsTransitioning(true);
-      // Simulate Edge processing / Ad interstitial delay (800ms)
       setTimeout(() => {
         setVideoId(id);
         saveToHistory(id);
         setSelectedQuality(ThumbnailQuality.MAXRES);
         setIsTransitioning(false);
-        // Smooth scroll to results
         setTimeout(() => {
           document.getElementById('results-area')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
@@ -150,7 +152,7 @@ export default function App() {
             <motion.button
               key={item.id}
               onClick={() => {
-                setUrl(`https://youtube.com/watch?v=${item.id}`);
+                setUrl(`https://www.youtube.com/watch?v=${item.id}`);
                 handleFetch();
               }}
               className="w-full flex items-center gap-4 p-2 rounded-2xl hover:bg-zinc-50 transition-all group text-left border border-zinc-100 hover:border-emerald-500/20 transform-gpu"
@@ -179,7 +181,6 @@ export default function App() {
       isRTL ? "font-arabic" : ""
     )} dir={isRTL ? 'rtl' : 'ltr'}>
       
-      {/* Premium Toast */}
       <AnimatePresence>
         {showToast && (
           <motion.div 
@@ -196,7 +197,6 @@ export default function App() {
         )}
       </AnimatePresence>
       
-      {/* Header */}
       <nav className="border-b border-zinc-200 bg-white/60 backdrop-blur-3xl sticky top-0 z-50 performance-optimized">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-24 flex items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center gap-2.5 group cursor-pointer overflow-hidden" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
@@ -219,9 +219,7 @@ export default function App() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <AdPlaceholder position="top" />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-16">
-          
           <div className="grid grid-cols-1 lg:col-span-8 space-y-16 sm:space-y-24">
-            
             <HeroInput 
               url={url} 
               setUrl={setUrl} 
@@ -229,11 +227,8 @@ export default function App() {
               error={error} 
               isRTL={isRTL} 
             />
-
-            {/* In desktop: Social Proof | In mobile: Empty (moved below results) */}
             <div className="hidden lg:block">{socialProof}</div>
 
-            {/* Interstitial Loading State Slot C */}
             <AnimatePresence mode="wait">
               {isTransitioning && (
                 <motion.div 
@@ -267,71 +262,67 @@ export default function App() {
               </AnimatePresence>
             </div>
 
-            {/* In mobile, History is moved below Results when present */}
             <div className="lg:hidden">{historySection}</div>
-
             <div className="content-auto">
               <InfoSections />
             </div>
             <AdPlaceholder position="inline" />
           </div>
 
-          {/* Sidebar Area Slot D */}
           <div className="lg:col-span-4 flex flex-col gap-12 relative">
-            {/* In mobile, Social Proof replaces History here */}
             <div className="hidden lg:block">{historySection}</div>
             <div className="lg:hidden">{socialProof}</div>
-            
             <div className="order-1 lg:order-none lg:sticky lg:top-28 self-start w-full">
               <AdPlaceholder position="sidebar" />
             </div>
           </div>
-
         </div>
-
         <AdPlaceholder position="bottom" />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-100 py-32 mt-32 bg-white content-auto">
+      {/* Footer المطور */}
+      <footer className="border-t border-zinc-100 py-20 mt-32 bg-white content-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-16">
-            <div className="flex flex-col items-center md:items-start gap-8 text-center md:text-left">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="flex flex-col items-center md:items-start gap-6 text-center md:text-left">
                <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-emerald-500/40">
-                  <Youtube className="text-white w-8 h-8" />
+                <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <Youtube className="text-white w-6 h-6" />
                 </div>
-                <span className="font-black text-4xl tracking-tighter text-zinc-900 italic">{t('app.name')}</span>
+                <span className="font-black text-2xl tracking-tighter text-zinc-900 italic">{t('app.name')}</span>
               </div>
-              <div className="max-w-sm space-y-4">
-                <p className="text-zinc-900 font-black text-lg">PRO ULTRA MAX POWER</p>
-                <p className="text-zinc-400 text-sm font-medium leading-relaxed">
-                  {t('footer.built_with')} The world's fastest engine for original YouTube assets extraction at full 4K fidelity.
-                </p>
-              </div>
+              <p className="text-zinc-400 text-sm font-medium max-w-xs leading-relaxed">
+                {t('footer.built_with')} Professional engine for YouTube assets extraction.
+              </p>
             </div>
 
-            <div className="flex items-center gap-8">
+            {/* روابط الصفحات القانونية وأزرار التبرع */}
+            <div className="flex flex-col items-center md:items-end gap-6">
+              <div className="flex gap-6 text-sm font-bold text-zinc-400">
+                <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-500 transition-colors">Privacy Policy</button>
+                <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-500 transition-colors">Terms of Service</button>
+              </div>
               <a 
                 href="https://buymeacoffee.com" 
                 target="_blank" 
-                className="flex items-center gap-5 px-12 py-6 rounded-3xl bg-zinc-900 hover:bg-black text-white font-black text-lg transition-all shadow-2xl shadow-zinc-200 active:scale-95 group"
+                className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-zinc-900 hover:bg-black text-white font-black transition-all shadow-xl active:scale-95 group"
               >
-                <Coffee className="w-6 h-6 text-emerald-400 group-hover:rotate-12 transition-transform" />
+                <Coffee className="w-5 h-5 text-emerald-400 group-hover:rotate-12 transition-transform" />
                 {t('footer.coffee')}
               </a>
             </div>
           </div>
           
-          <div className="mt-32 pt-12 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-8">
-             <div className="flex items-center gap-3">
-               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-               <p className="text-zinc-400 text-xs font-black uppercase tracking-[0.3em]">{t('app.name')} Internal Engine (AI Powered)</p>
-             </div>
-             <p className="text-zinc-300 text-[10px] font-bold uppercase tracking-widest">{new Date().getFullYear()} PRO MAX RELEASE</p>
+          <div className="mt-20 pt-8 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-center">
+             <p className="text-zinc-400 text-[10px] font-black uppercase tracking-[0.2em]">{t('app.name')} AI Powered Engine</p>
+             <p className="text-zinc-300 text-[10px] font-bold uppercase tracking-widest">© {new Date().getFullYear()} ALL RIGHTS RESERVED</p>
           </div>
         </div>
       </footer>
+
+      {/* المكون الخاص بالنوافذ القانونية */}
+      <LegalModals activeModal={activeModal} setActiveModal={setActiveModal} />
+      
     </div>
   );
 }
