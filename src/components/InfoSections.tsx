@@ -25,8 +25,8 @@ export const InfoSections = () => {
         </p>
       </section>
 
-      <section className="space-y-8">
-        <h2 className="text-2xl font-black flex items-center gap-3"><HelpCircle className="text-emerald-500"/> FAQ</h2>
+      <section className="space-y-3">
+        <h2 className="text-2xl font-black flex items-center gap-3 mb-2"><HelpCircle className="text-emerald-500"/> FAQ</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-6 bg-zinc-50 rounded-2xl">
             <h4 className="font-black mb-2">Is it free?</h4>

@@ -183,21 +183,16 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="border-t border-zinc-100 py-20 mt-32 bg-white">
-        <div className="max-w-7xl mx-auto px-4 text-center space-y-8">
-          <div className="flex flex-col items-center gap-4">
-            <span className="font-black text-2xl italic text-emerald-600">GetThumbnail</span>
-            <p className="text-zinc-400 text-sm max-w-sm font-medium">The professional engine for original YouTube assets extraction at full fidelity.</p>
+      <footer className="border-t border-zinc-100 py-8 mt-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 text-center space-y-4">
+          <div className="flex flex-col items-center gap-2">
+            <span className="font-black text-xl italic text-emerald-600">GetThumbnail</span>
+            <p className="text-zinc-800 text-sm max-w-sm font-bold">The professional engine for original YouTube assets extraction at full fidelity.</p>
           </div>
           
-          <div className="flex justify-center gap-8 text-sm font-bold text-zinc-500">
-            <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-500 transition-colors underline decoration-zinc-200 underline-offset-4">Privacy Policy</button>
-            <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-500 transition-colors underline decoration-zinc-200 underline-offset-4">Terms of Service</button>
-          </div>
-
-          <div className="pt-8 border-t border-zinc-50 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-zinc-400 text-[10px] font-black tracking-widest uppercase">AI Powered Asset Engine</p>
-            <p className="text-zinc-300 text-[10px] font-bold uppercase">© {new Date().getFullYear()} GetThumbnail. All Rights Reserved</p>
+          <div className="flex justify-center gap-8 text-sm font-black text-zinc-900">
+            <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-600 transition-colors underline underline-offset-4">Privacy Policy</button>
+            <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-600 transition-colors underline underline-offset-4">Terms of Service</button>
           </div>
         </div>
       </footer>
