@@ -87,7 +87,12 @@ export const ResultsView = ({ videoId, selectedQuality, setSelectedQuality, onDo
                       : "bg-zinc-50/50 border-zinc-100 text-zinc-500 hover:border-emerald-500/30 hover:bg-white"
                   )}
                 >
-                  <span className="truncate">{t(`quality.${q}`)}</span>
+                  <span className="truncate">
+  {q === 'maxresdefault' ? 'High Quality HD (1280x720)' :
+   q === 'sddefault' ? 'Standard Definition (640x480)' :
+   q === 'hqdefault' ? 'Normal Quality HQ (480x360)' :
+   q === 'mqdefault' ? 'Medium Quality (320x180)' : 'Small Thumbnail'}
+</span>
                   <div className={cn(
                     "w-2.5 h-2.5 min-w-[0.625rem] rounded-full transition-all duration-500",
                     selectedQuality === q ? "bg-emerald-500 scale-125 sm:scale-150 shadow-[0_0_10px_rgba(16,185,129,0.5)]" : "bg-zinc-200 group-hover:bg-emerald-300"

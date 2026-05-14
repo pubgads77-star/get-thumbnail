@@ -198,10 +198,45 @@ export default function App() {
       </footer>
 
       <LegalModal title="Privacy Policy" isOpen={activeModal === 'privacy'} onClose={() => setActiveModal(null)}>
-        <div className="space-y-4">
-          <p>Your privacy is important to us. GetThumbnail does not store any personal data, IP addresses, or the YouTube links you process on our servers.</p>
-          <p><strong>Cookies:</strong> We use Google AdSense which may use cookies to serve ads based on your prior visits.</p>
-          <p><strong>Data Usage:</strong> All image processing happens via temporary edge functions and is delivered directly to your browser.</p>
+        <div className="space-y-6 text-zinc-800 font-medium">
+          <p>
+            At <span className="font-black text-emerald-600">GetThumbnail</span>, accessible from your current URL, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by GetThumbnail and how we use it.
+          </p>
+
+          <section className="space-y-2">
+            <h3 className="font-black text-zinc-900 border-b border-zinc-100 pb-1 uppercase text-xs tracking-widest">1. Data Collection</h3>
+            <p>
+              We do not store any personal data, video links, or processed images on our servers. All thumbnail extractions are performed in real-time using secure edge functions and are delivered directly to your browser session.
+            </p>
+          </section>
+
+          <section className="space-y-2">
+            <h3 className="font-black text-zinc-900 border-b border-zinc-100 pb-1 uppercase text-xs tracking-widest">2. Google AdSense & Cookies</h3>
+            <p>
+              Google is one of the third-party vendors on our site. It uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to our site and other sites on the internet. You may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy.
+            </p>
+          </section>
+
+          <section className="space-y-2">
+            <h3 className="font-black text-zinc-900 border-b border-zinc-100 pb-1 uppercase text-xs tracking-widest">3. Log Files</h3>
+            <p>
+              GetThumbnail follows a standard procedure of using log files. These files log visitors when they visit websites. This is part of hosting services' analytics. The information collected by log files includes internet protocol (IP) addresses, browser type, and date/time stamps.
+            </p>
+          </section>
+
+          <section className="space-y-2">
+            <h3 className="font-black text-zinc-900 border-b border-zinc-100 pb-1 uppercase text-xs tracking-widest">4. Contact Support</h3>
+            <p>
+              If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us through our official support email:
+            </p>
+            <div className="bg-zinc-50 p-4 rounded-2xl border border-zinc-100 mt-2 flex items-center justify-center">
+              <span className="font-black text-emerald-600 text-lg select-all">pubgads77@gmail.com</span>
+            </div>
+          </section>
+
+          <p className="text-[10px] text-zinc-400 text-center pt-4 uppercase tracking-tighter">
+            Last Updated: May 2024 | GetThumbnail Asset Engine
+          </p>
         </div>
       </LegalModal>
 
