@@ -1,0 +1,6 @@
+{
+  "name": "GetThumbnail - YouTube Thumbnail Downloader",
+  "description": "High-performance platform for downloading high-quality YouTube thumbnails with real-time preview, fallback logic, and multi-language support (Arabic & English).",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
