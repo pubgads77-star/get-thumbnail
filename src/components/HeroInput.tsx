@@ -7,10 +7,10 @@ export const HeroInput = ({ url, setUrl, onFetch, error, isRTL }: any) => {
     <section className="space-y-12 text-center lg:text-left">
       <div className="space-y-4">
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-[1.05] text-zinc-900">
-          Download YouTube Thumbnail
+          Download YouTube Videos Thumbnail
         </h1>
         <p className="text-zinc-500 text-base md:text-xl max-w-xl mx-auto lg:mx-0 font-medium">
-          Extract original 4K assets from any YouTube video. Zero cost. Edge-powered delivery.
+          Extract 4K thumbnails from any YouTube video. Fast and free. No login required.
         </p>
       </div>
 
