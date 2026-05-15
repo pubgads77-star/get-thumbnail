@@ -1,7 +1,7 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * GetThumbnail - Final Production Version with Adsterra
+ * GetThumbnail - Final English Version with Full Adsterra Integration
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -19,76 +19,65 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-// --- مكون تشغيل إعلان Adsterra المطور ---
-const AdsterraBanner = () => {
+// --- مكون عام لتشغيل أي بنر إعلاني من أدستيرا ---
+const AdsterraBanner = ({ id, width, height, className }: { id: string, width: number, height: number, className?: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // نتحقق من أن المربع فارغ قبل إضافة الإعلان لتجنب التكرار
     if (containerRef.current && !containerRef.current.firstChild) {
       const scriptOptions = document.createElement('script');
       scriptOptions.type = 'text/javascript';
       scriptOptions.innerHTML = `
         atOptions = {
-          'key' : 'b77f6856d894549a60090ecdbe2b8467',
+          'key' : '${id}',
           'format' : 'iframe',
-          'height' : 50,
-          'width' : 320,
+          'height' : ${height},
+          'width' : ${width},
           'params' : {}
         };
       `;
       
       const scriptInvoke = document.createElement('script');
       scriptInvoke.type = 'text/javascript';
-      scriptInvoke.src = "https://www.highperformanceformat.com/b77f6856d894549a60090ecdbe2b8467/invoke.js";
+      scriptInvoke.src = `https://www.highperformanceformat.com/${id}/invoke.js`;
       
       containerRef.current.appendChild(scriptOptions);
       containerRef.current.appendChild(scriptInvoke);
     }
+  }, [id, width, height]);
+
+  return <div ref={containerRef} className={cn("flex justify-center items-center overflow-hidden mx-auto", className)} />;
+};
+
+// --- مكون لتشغيل الإعلانات غير المرئية (SocialBar & Popunder) ---
+const GlobalAds = () => {
+  useEffect(() => {
+    // تشغيل SocialBar
+    const socialBar = document.createElement('script');
+    socialBar.src = "https://pl29450616.profitablecpmratenetwork.com/4a/cb/d3/4acbd3bf74ff439f2cc7fe5e42cc2329.js";
+    socialBar.async = true;
+    document.body.appendChild(socialBar);
+
+    // تشغيل Popunder
+    const popunder = document.createElement('script');
+    popunder.src = "https://pl29450608.profitablecpmratenetwork.com/5f/d3/93/5fd3930cb73863c526b1c9ce578ab2f8.js";
+    popunder.async = true;
+    document.body.appendChild(popunder);
   }, []);
 
-  return <div ref={containerRef} className="flex justify-center items-center overflow-hidden min-h-[50px] w-full" />;
+  return null;
 };
 
-// --- Ad Placeholder Component ---
-const AdPlaceholder = ({ position, children }: { position: 'top' | 'sidebar' | 'bottom' | 'inline', children?: React.ReactNode }) => {
-  return (
-    <div className={cn(
-      "flex flex-col items-center justify-center rounded-2xl overflow-hidden mx-auto",
-      position === 'top' && "w-full min-h-[90px] mb-8 border border-zinc-100 bg-white shadow-sm",
-      position === 'sidebar' && "w-full aspect-square sticky top-24 border border-dashed border-zinc-200 bg-zinc-50/50",
-      position === 'bottom' && "w-full min-h-[250px] mt-20",
-      position === 'inline' && "w-full p-6"
-    )}>
-      {children ? children : (
-        <div className="flex flex-col items-center">
-          <div className="bg-zinc-200 px-3 py-1 rounded-full mb-2 text-zinc-500 text-[10px] uppercase tracking-widest text-center">ADVERTISEMENT</div>
-          <div className="text-sm text-zinc-400 italic font-medium">Space for Ads</div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// --- Legal Modal Component ---
-const LegalModal = ({ title, isOpen, onClose, children }: any) => {
-  if (!isOpen) return null;
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-white rounded-[2rem] w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl">
-        <div className="p-6 border-b border-zinc-100 flex items-center justify-between bg-zinc-50">
-          <h2 className="text-xl font-black text-zinc-900">{title}</h2>
-          <button onClick={onClose} className="p-2 hover:bg-zinc-200 rounded-full transition-colors">
-            <X className="w-6 h-6 text-zinc-500" />
-          </button>
-        </div>
-        <div className="p-8 overflow-y-auto text-zinc-600 leading-relaxed text-sm">
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-};
+// --- Ad Placeholder Wrapper ---
+const AdWrapper = ({ children, position }: { children: React.ReactNode, position: 'top' | 'sidebar' }) => (
+  <div className={cn(
+    "flex items-center justify-center overflow-hidden",
+    position === 'top' && "w-full mb-8 min-h-[50px] sm:min-h-[90px]",
+    position === 'sidebar' && "w-full aspect-square sticky top-24 bg-zinc-50 border border-dashed border-zinc-200 rounded-2xl"
+  )}>
+    {children}
+  </div>
+);
 
 export default function App() {
   const [url, setUrl] = useState('');
@@ -128,75 +117,59 @@ export default function App() {
         }, 100);
       }, 800);
     } else if (targetUrl.trim() !== '') {
-      setError("Invalid YouTube URL. Please check the link.");
+      setError("Invalid YouTube URL.");
     }
   };
 
-  const handleDownload = () => {
-    if (!videoId) return;
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
-    window.open(`https://img.youtube.com/vi/${videoId}/${selectedQuality}.jpg`, '_blank');
-  };
-
   return (
-    <div className="min-h-screen bg-[#fafafa] bg-dots text-zinc-900 font-sans selection:bg-emerald-600/10">
-      
-      {/* Toast Notification */}
+    <div className="min-h-screen bg-[#fafafa] bg-dots text-zinc-900 font-sans">
+      <GlobalAds /> {/* تشغيل SocialBar و Popunder تلقائياً */}
+
       <AnimatePresence>
         {showToast && (
           <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-8 py-5 bg-zinc-900 text-white font-black rounded-[2rem] shadow-2xl flex items-center gap-4">
-            <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center"><CheckCircle2 className="w-5 h-5 text-zinc-900" /></div>
-            Download Started Successfully
+            <CheckCircle2 className="w-6 h-6 text-emerald-500" /> Download Started
           </motion.div>
         )}
       </AnimatePresence>
       
-      {/* Navbar */}
-      <nav className="border-b border-zinc-200 bg-white/60 backdrop-blur-3xl sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-24 flex items-center justify-between">
-          <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => window.location.reload()}>
-            <div className="w-9 h-9 sm:w-12 sm:h-12 bg-emerald-500 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-500/20">
-              <Youtube className="text-white w-5 h-5 sm:w-7 sm:h-7" />
-            </div>
-            <span className="font-black text-xl sm:text-3xl tracking-tighter italic">GetThumbnail</span>
+      <nav className="border-b border-zinc-200 bg-white/60 backdrop-blur-3xl sticky top-0 z-50 h-16 sm:h-24 flex items-center">
+        <div className="max-w-7xl mx-auto px-4 w-full flex items-center justify-between">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.reload()}>
+            <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg"><Youtube className="text-white" /></div>
+            <span className="font-black text-xl italic tracking-tighter">GetThumbnail</span>
           </div>
-          <a href="mailto:pubgads77@gmail.com" className="text-xs sm:text-sm font-black bg-zinc-100 px-4 py-2 rounded-xl hover:bg-zinc-200 transition-all">Contact Support</a>
+          <a href="mailto:pubgads77@gmail.com" className="text-xs font-black bg-zinc-100 px-4 py-2 rounded-xl">Support</a>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-8">
         
-        {/* Top Ad (البانر الخاص بك) */}
-        <AdPlaceholder position="top">
-           <AdsterraBanner />
-        </AdPlaceholder>
+        {/* Top Ad - Responsive Banner */}
+        <AdWrapper position="top">
+            {/* للكمبيوتر يظهر 728x90 وللموبايل يظهر 320x50 */}
+            <div className="hidden sm:block">
+              <AdsterraBanner id="60ef3bd39b8d3bfe2c8256a3078c2a88" width={728} height={90} />
+            </div>
+            <div className="sm:hidden">
+              <AdsterraBanner id="b77f6856d894549a60090ecdbe2b8467" width={320} height={50} />
+            </div>
+        </AdWrapper>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-8 space-y-16">
-            <HeroInput 
-                url={url} 
-                setUrl={setUrl} 
-                onFetch={() => handleFetch()} 
-                error={error} 
-                isRTL={false} 
-            />
+            <HeroInput url={url} setUrl={setUrl} onFetch={() => handleFetch()} error={error} isRTL={false} />
 
             {isTransitioning && (
-              <div className="py-20 flex flex-col items-center bg-white rounded-[3rem] border border-zinc-100 shadow-xl">
+              <div className="py-20 flex flex-col items-center bg-white rounded-[3rem] border border-zinc-100">
                 <Loader2 className="w-12 h-12 text-emerald-500 animate-spin mb-4" />
-                <p className="text-zinc-500 font-bold">Fetching High Quality Assets...</p>
+                <p className="text-zinc-500 font-bold">Processing Assets...</p>
               </div>
             )}
 
             <div id="results-area">
               {videoId && !isTransitioning && (
-                <ResultsView 
-                  videoId={videoId} 
-                  selectedQuality={selectedQuality} 
-                  setSelectedQuality={setSelectedQuality} 
-                  onDownload={handleDownload} 
-                />
+                <ResultsView videoId={videoId} selectedQuality={selectedQuality} setSelectedQuality={setSelectedQuality} onDownload={() => setShowToast(true)} />
               )}
             </div>
 
@@ -204,55 +177,49 @@ export default function App() {
           </div>
 
           <aside className="lg:col-span-4 space-y-8">
-            <section className="bg-white border border-zinc-100 rounded-[2rem] p-6 shadow-xl">
-              <h3 className="font-bold mb-6 flex items-center gap-2"><History className="w-5 h-5 text-emerald-600" /> Recent Exports</h3>
+            <section className="bg-white border border-zinc-100 rounded-[2rem] p-6 shadow-sm">
+              <h3 className="font-bold mb-6 flex items-center gap-2 text-zinc-400 text-sm italic">Recent Downloads</h3>
               <div className="space-y-4">
-                {history.length === 0 ? <p className="text-zinc-400 text-xs italic">No history yet.</p> : history.map((item) => (
-                  <button 
-                    key={item.id} 
-                    onClick={() => { 
-                      const historyUrl = `https://www.youtube.com/watch?v=${item.id}`;
-                      setUrl(historyUrl); 
-                      handleFetch(historyUrl); 
-                    }} 
-                    className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-50 border border-transparent hover:border-zinc-100 transition-all text-left group"
-                  >
-                    <img src={`https://img.youtube.com/vi/${item.id}/mqdefault.jpg`} className="w-16 aspect-video rounded-lg object-cover" alt="prev" />
-                    <span className="text-xs font-mono text-zinc-500 truncate group-hover:text-emerald-600">ID: {item.id}</span>
+                {history.map((item) => (
+                  <button key={item.id} onClick={() => { setUrl(`https://youtube.com/watch?v=${item.id}`); handleFetch(`https://youtube.com/watch?v=${item.id}`); }} className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-50 transition-all text-left group">
+                    <img src={`https://img.youtube.com/vi/${item.id}/default.jpg`} className="w-16 aspect-video rounded-lg object-cover" alt="history" />
+                    <span className="text-[10px] font-mono text-zinc-400 group-hover:text-emerald-600">ID: {item.id}</span>
                   </button>
                 ))}
               </div>
             </section>
 
-            {/* Sidebar Ad Slot */}
-            <AdPlaceholder position="sidebar" />
+            {/* Sidebar Square Ad */}
+            <AdWrapper position="sidebar">
+               <AdsterraBanner id="997aff01df7a900175fc4138582ad01f" width={300} height={250} />
+            </AdWrapper>
           </aside>
         </div>
       </main>
 
-      <footer className="border-t border-zinc-100 py-8 mt-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 text-center space-y-4">
-          <div className="flex flex-col items-center gap-2">
-            <span className="font-black text-xl italic text-emerald-600">GetThumbnail</span>
-            <p className="text-zinc-800 text-sm max-w-sm font-bold">The professional engine for original YouTube assets extraction at full fidelity.</p>
+      <footer className="border-t border-zinc-100 py-12 mt-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 text-center space-y-6">
+          <span className="font-black text-xl italic text-emerald-600">GetThumbnail</span>
+          <div className="flex justify-center gap-6 text-xs font-black text-zinc-400 uppercase tracking-widest">
+            <button onClick={() => setActiveModal('privacy')}>Privacy</button>
+            <button onClick={() => setActiveModal('terms')}>Terms</button>
           </div>
-          
-          <div className="flex flex-wrap justify-center gap-6 text-sm font-black text-zinc-900">
-            <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-600 transition-colors underline underline-offset-4">Privacy Policy</button>
-            <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-600 transition-colors underline underline-offset-4">Terms of Service</button>
-            <button onClick={() => setActiveModal('contact')} className="hover:text-emerald-600 transition-colors underline underline-offset-4">Contact Us</button>
-          </div>
+          <p className="text-[10px] text-zinc-300">© 2024 Asset Extraction Engine</p>
         </div>
       </footer>
 
-      {/* Modals (تكملة الكود) */}
-      <LegalModal title="Privacy Policy" isOpen={activeModal === 'privacy'} onClose={() => setActiveModal(null)}>
-        <div className="space-y-4 text-zinc-800">
-          <p>We respect your privacy. No personal data is stored on our servers.</p>
-          <p>Ads are provided by Adsterra and Google. Cookies may be used for ad personalization.</p>
-        </div>
-      </LegalModal>
-      {/* ... بقية الـ Modals بنفس الطريقة ... */}
+      {/* Modal Example */}
+      <AnimatePresence>
+        {activeModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setActiveModal(null)}>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white p-8 rounded-[2rem] max-w-lg w-full relative" onClick={e => e.stopPropagation()}>
+              <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 p-2 bg-zinc-100 rounded-full"><X className="w-4 h-4" /></button>
+              <h2 className="text-xl font-black mb-4 uppercase italic">{activeModal} Policy</h2>
+              <p className="text-zinc-500 text-sm leading-relaxed">This service provides YouTube thumbnail extraction for educational purposes. All assets are property of their respective owners.</p>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
