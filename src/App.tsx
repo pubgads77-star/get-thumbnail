@@ -1,10 +1,10 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * GetThumbnail - Final Production Version with HilltopAds Integration
+ * GetThumbnail - Final Production Version (Adsterra/HilltopAds Ready)
  */
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { extractVideoId, ThumbnailQuality } from './lib/youtube';
 import { cn } from './lib/utils';
 import { HeroInput } from './components/HeroInput';
@@ -19,40 +19,44 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-// --- مكون إعلان HilltopAds (Zone #7046621) ---
-const HilltopBanner = () => {
+// --- مكون تشغيل إعلان HilltopAds المخصص ---
+const HilltopBanner = ({ adUrl }: { adUrl: string }) => {
   const adRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // نتحقق من أن المربع فارغ لتجنب تكرار الإعلان
-    if (adRef.current && !adRef.current.firstChild) {
+    // نضمن عدم تكرار الإعلان داخل نفس العنصر
+    if (adRef.current && adRef.current.childNodes.length === 0) {
       const script = document.createElement('script');
-      // الرابط الخاص بك من Zone #7046621
-      script.src = "//quarrelsomebitter.com/buXSV.skdBG_lp0/YyW/cL/Ze/mx9tumZIUflCkDPfThcgwFN/DZY/2eMHjjErtfNYzGA/0CN/jHYwyaNCQZ";
+      script.src = adUrl;
       script.async = true;
       script.setAttribute('referrerPolicy', 'no-referrer-when-downgrade');
-      
       adRef.current.appendChild(script);
     }
-  }, []);
+  }, [adUrl]);
 
-  return <div ref={adRef} className="flex justify-center items-center w-full min-h-[50px] sm:min-h-[90px]" />;
+  return <div ref={adRef} className="w-full flex justify-center items-center overflow-hidden" />;
 };
 
-// --- مكون المربع الإعلاني العام ---
-const AdPlaceholder = ({ position, children }: { position: 'top' | 'sidebar' | 'bottom' | 'inline', children?: React.ReactNode }) => {
+// --- مكون المربع الإعلاني مع إصلاح خطأ TypeScript ---
+interface AdPlaceholderProps {
+  position: 'top' | 'sidebar' | 'bottom' | 'inline';
+  children?: React.ReactNode;
+  className?: string; // أضفنا هذا السطر لإصلاح الخطأ الذي ظهر لك
+}
+
+const AdPlaceholder = ({ position, children, className }: AdPlaceholderProps) => {
   return (
     <div className={cn(
-      "flex flex-col items-center justify-center rounded-2xl overflow-hidden mx-auto",
-      position === 'top' && "w-full min-h-[90px] mb-8 border border-zinc-100 bg-white shadow-sm",
-      position === 'sidebar' && "w-full aspect-square sticky top-24 border border-dashed border-zinc-200 bg-zinc-50/50",
-      position === 'bottom' && "w-full min-h-[250px] mt-20",
-      position === 'inline' && "w-full p-6"
+      "flex flex-col items-center justify-center rounded-2xl overflow-hidden mx-auto transition-all",
+      // تنسيق إعلان البيسي العلوي
+      position === 'top' && "w-full min-h-[50px] sm:min-h-[90px] mb-8 bg-white border border-zinc-100 shadow-sm",
+      // تنسيق إعلان الجانب (البيسي فقط)
+      position === 'sidebar' && "hidden lg:flex w-full aspect-square sticky top-24 border border-dashed border-zinc-200 bg-zinc-50/50",
+      className
     )}>
       {children ? children : (
         <div className="flex flex-col items-center">
-          <div className="bg-zinc-200 px-3 py-1 rounded-full mb-2 text-zinc-500 text-[10px] uppercase tracking-widest text-center">ADVERTISEMENT</div>
-          <div className="text-sm text-zinc-400 italic font-medium">Your Ad Here</div>
+          <div className="bg-zinc-200 px-3 py-1 rounded-full mb-2 text-zinc-500 text-[10px] uppercase tracking-widest">ADVERTISEMENT</div>
         </div>
       )}
     </div>
@@ -60,7 +64,7 @@ const AdPlaceholder = ({ position, children }: { position: 'top' | 'sidebar' | '
 };
 
 // --- مكون القائمة القانونية (Modal) ---
-const LegalModal = ({ title, isOpen, onClose, children }: any) => {
+const LegalModal = ({ title, isOpen, onClose, children }: { title: string, isOpen: boolean, onClose: () => void, children: React.ReactNode }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -150,15 +154,15 @@ export default function App() {
             </div>
             <span className="font-black text-xl sm:text-3xl tracking-tighter italic">GetThumbnail</span>
           </div>
-          <a href="mailto:pubgads77@gmail.com" className="text-xs sm:text-sm font-black bg-zinc-100 px-4 py-2 rounded-xl hover:bg-zinc-200 transition-all">Contact Support</a>
+          <a href="mailto:pubgads77@gmail.com" className="text-xs sm:text-sm font-black bg-zinc-100 px-4 py-2 rounded-xl hover:bg-zinc-200 transition-all">Support</a>
         </div>
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         
-        {/* Top Ad Banner (HilltopAds) */}
-        <AdPlaceholder position="top">
-           <HilltopBanner />
+        {/* Top Ad Banner (متجاوب للجوال والبيسي) */}
+        <AdPlaceholder position="top" className="!bg-transparent border-none shadow-none">
+           <HilltopBanner adUrl="//quarrelsomebitter.com/buXSV.skdBG_lp0/YyW/cL/Ze/mx9tumZIUflCkDPfThcgwFN/DZY/2eMHjjErtfNYzGA/0CN/jHYwyaNCQZ" />
         </AdPlaceholder>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -195,7 +199,7 @@ export default function App() {
           <aside className="lg:col-span-4 space-y-8">
             {/* History Section */}
             <section className="bg-white border border-zinc-100 rounded-[2rem] p-6 shadow-xl">
-              <h3 className="font-bold mb-6 flex items-center gap-2"><History className="w-5 h-5 text-emerald-600" /> Recent Exports</h3>
+              <h3 className="font-bold mb-6 flex items-center gap-2 text-zinc-900"><History className="w-5 h-5 text-emerald-600" /> Recent Exports</h3>
               <div className="space-y-4">
                 {history.length === 0 ? <p className="text-zinc-400 text-xs italic">No history yet.</p> : history.map((item) => (
                   <button 
@@ -214,9 +218,10 @@ export default function App() {
               </div>
             </section>
 
-            {/* Sidebar Ad Slot (يمكنك تكرار البنر أو وضع إعلان آخر) */}
+            {/* Sidebar Square Ad (يظهر في البيسي فقط تلقائياً) */}
             <AdPlaceholder position="sidebar">
-               <HilltopBanner />
+               {/* ضع هنا رابط الـ Zone الجديد بمقاس 300x250 لو حصلت عليه، أو اتركه فارغاً حالياً */}
+               <div className="text-zinc-300 text-[10px] font-bold">AD SLOT</div>
             </AdPlaceholder>
           </aside>
         </div>
@@ -226,23 +231,23 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 text-center space-y-6">
           <div className="flex flex-col items-center gap-2">
             <span className="font-black text-2xl italic text-emerald-600">GetThumbnail</span>
-            <p className="text-zinc-500 text-sm max-w-sm font-medium">The professional engine for original YouTube assets extraction at full fidelity.</p>
+            <p className="text-zinc-500 text-sm max-w-sm font-medium">Original YouTube assets extraction at full fidelity.</p>
           </div>
           
           <div className="flex flex-wrap justify-center gap-8 text-sm font-black text-zinc-900 uppercase tracking-widest">
-            <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-600 transition-colors">Privacy Policy</button>
-            <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-600 transition-colors">Terms of Service</button>
-            <button onClick={() => setActiveModal('contact')} className="hover:text-emerald-600 transition-colors">Contact Us</button>
+            <button onClick={() => setActiveModal('privacy')} className="hover:text-emerald-600 transition-colors underline underline-offset-8">Privacy Policy</button>
+            <button onClick={() => setActiveModal('terms')} className="hover:text-emerald-600 transition-colors underline underline-offset-8">Terms of Service</button>
+            <button onClick={() => setActiveModal('contact')} className="hover:text-emerald-600 transition-colors underline underline-offset-8">Contact Us</button>
           </div>
           <div className="text-[10px] text-zinc-300 font-bold tracking-widest uppercase italic">© 2024 GetThumbnail Asset Engine</div>
         </div>
       </footer>
 
-      {/* Modals */}
+      {/* Modals Section */}
       <LegalModal title="Privacy Policy" isOpen={activeModal === 'privacy'} onClose={() => setActiveModal(null)}>
         <div className="space-y-4">
           <p>We respect your privacy. No personal data or video links are stored on our servers.</p>
-          <p>We use third-party advertising companies (like HilltopAds) to serve ads when you visit our website.</p>
+          <p>Advertising: We use HilltopAds to serve clean, mainstream advertisements.</p>
           <p>Contact: pubgads77@gmail.com</p>
         </div>
       </LegalModal>
@@ -250,18 +255,14 @@ export default function App() {
       <LegalModal title="Terms of Service" isOpen={activeModal === 'terms'} onClose={() => setActiveModal(null)}>
         <div className="space-y-4">
           <p>1. Usage is for personal and educational purposes.</p>
-          <p>2. Thumbnails are the property of their respective YouTube creators.</p>
-          <p>3. We are not affiliated with YouTube or Google.</p>
+          <p>2. Thumbnails are the property of their respective creators.</p>
         </div>
       </LegalModal>
 
       <LegalModal title="Contact Us" isOpen={activeModal === 'contact'} onClose={() => setActiveModal(null)}>
-        <div className="text-center space-y-4">
-          <p className="font-bold text-lg">Questions or Feedback?</p>
-          <div className="bg-zinc-50 p-6 rounded-3xl border border-zinc-100">
-             <p className="text-xs uppercase font-black text-zinc-400 mb-2">Support Email</p>
-             <a href="mailto:pubgads77@gmail.com" className="text-xl font-black text-emerald-600">pubgads77@gmail.com</a>
-          </div>
+        <div className="text-center py-4">
+          <p className="font-bold mb-4">Questions or Feedback?</p>
+          <a href="mailto:pubgads77@gmail.com" className="text-xl font-black text-emerald-600 select-all">pubgads77@gmail.com</a>
         </div>
       </LegalModal>
 
